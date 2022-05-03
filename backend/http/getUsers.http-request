@@ -1,0 +1,13 @@
+{
+  "body": {
+    "content": "",
+    "file": false,
+    "fileSize": false
+  },
+  "headers": {
+    "authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MjYxM2I1Nzc2NzU4MGM1MGMwZjBjYjkiLCJpYXQiOjE2NTA1NDAwMjksImV4cCI6MTY1MDU0MDkyOX0.e8hrQZfAcgdiINzDFrf1hfYFmUIlW2-2C9P39hnSayF1-1mBAqU7ghjFYLBsXYLVykWBuSLLTgM8J_l9lHkW8A"
+  },
+  "method": "GET",
+  "title": "Get All Users",
+  "url": "http://localhost:8000/users"
+}

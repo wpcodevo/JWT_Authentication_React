@@ -1,0 +1,13 @@
+{
+  "body": {
+    "content": "",
+    "file": false,
+    "fileSize": false
+  },
+  "headers": {
+    "authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MjYxMjBlMDYyZjRmMThlMTVkZjdiNDgiLCJpYXQiOjE2NTA1Mzk0MTksImV4cCI6MTY1MDU0MDMxOX0.ViMoWXT8F9V8NDNSmmr8J9eSqpSr7nwZ7SdF1vjlrOD542rGSd1WUAPbJYTvmcXdDgGoVaWXlvZNGhGwioCs2A"
+  },
+  "method": "GET",
+  "title": "Get Me",
+  "url": "http://localhost:8000/users/me"
+}

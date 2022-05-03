@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "ms-azuretools.vscode-docker",
+    "mikestead.dotenv",
+    "mkloubert.vscode-http-client",
+    "cweijan.vscode-mysql-client2"
+  ]
+}
