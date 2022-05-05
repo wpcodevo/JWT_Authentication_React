@@ -1,8 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { batch } from 'react-redux';
 import { LoginInput } from '../../pages/login.page';
 import { RegisterInput } from '../../pages/register.page';
-import { setAccessToken } from '../features/userSlice';
 import customFetchBase from './customFetchBase';
 import { IUser } from './types';
 import { userApi } from './userApi';
@@ -36,11 +34,8 @@ export const authApi = createApi({
       },
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          batch(async () => {
-            await dispatch(userApi.endpoints.getMe.initiate(null));
-            dispatch(setAccessToken(data.access_token));
-          });
+          await queryFulfilled;
+          await dispatch(userApi.endpoints.getMe.initiate(null));
         } catch (error) {}
       },
     }),
