@@ -66,8 +66,6 @@ export const registerHandler = async (
   }
 };
 
-let refreshTokens: string[] = [];
-
 export const loginHandler = async (
   req: Request<{}, {}, LoginUserInput>,
   res: Response,
@@ -95,9 +93,6 @@ export const loginHandler = async (
       ...accessTokenCookieOptions,
       httpOnly: false,
     });
-
-    // Add refresh token to the array
-    refreshTokens.push(refresh_token);
 
     // Send Access Token
     res.status(200).json({
@@ -130,16 +125,10 @@ export const refreshAccessTokenHandler = async (
       refresh_token,
       'refreshTokenPublicKey'
     );
+
     const message = 'Could not refresh access token';
     if (!decoded) {
       return next(new AppError(message, 403));
-    }
-
-    // Check if the refresh token is in the refreshTokens array
-    if (!refreshTokens.includes(refresh_token)) {
-      await redisClient.del(decoded.sub);
-      logout(res);
-      return res.redirect(`${config.get<string>('origin')}/login`);
     }
 
     // Check if the user has a valid session
@@ -167,9 +156,6 @@ export const refreshAccessTokenHandler = async (
       httpOnly: false,
     });
 
-    // Remove refresh_token from the array
-    refreshTokens = refreshTokens.filter((token) => token !== refresh_token);
-
     // Send response
     res.status(200).json({
       status: 'success',
@@ -189,7 +175,7 @@ export const logoutHandler = async (
     const user = res.locals.user;
     await redisClient.del(user._id);
     logout(res);
-    return res.redirect(`${config.get<string>('origin')}/login`);
+    res.status(200).json({ status: 'success' });
   } catch (err: any) {
     next(err);
   }

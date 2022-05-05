@@ -3,12 +3,12 @@ services:
   mongo:
     image: mongo:latest
     container_name: mongo
+    env_file:
+      - ./.env
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGODB_DATABASE_NAME}
-    env_file:
-      - ./.env
     volumes:
       - mongo:/data/db
     ports:

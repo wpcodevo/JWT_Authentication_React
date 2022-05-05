@@ -1,6 +1,9 @@
 import { Box, Container, Typography } from '@mui/material';
+import { useAppSelector } from '../redux/store';
 
 const UnauthorizePage = () => {
+  const user = useAppSelector((state) => state.userState.user);
+  console.log('Unauthorized', user);
   return (
     <Container maxWidth='lg'>
       <Box

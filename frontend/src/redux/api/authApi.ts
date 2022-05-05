@@ -1,21 +1,20 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { batch } from 'react-redux';
 import { LoginInput } from '../../pages/login.page';
 import { RegisterInput } from '../../pages/register.page';
+import { setAccessToken } from '../features/userSlice';
+import customFetchBase from './customFetchBase';
 import { IUser } from './types';
 import { userApi } from './userApi';
 
-const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
-
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${BASE_URL}/api/auth/`,
-  }),
+  baseQuery: customFetchBase,
   endpoints: (builder) => ({
     registerUser: builder.mutation<IUser, RegisterInput>({
       query(data) {
         return {
-          url: 'register',
+          url: 'auth/register',
           method: 'POST',
           body: data,
         };
@@ -29,7 +28,7 @@ export const authApi = createApi({
     >({
       query(data) {
         return {
-          url: 'login',
+          url: 'auth/login',
           method: 'POST',
           body: data,
           credentials: 'include',
@@ -37,15 +36,18 @@ export const authApi = createApi({
       },
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
-          await queryFulfilled;
-          await dispatch(userApi.endpoints.getMe.initiate(null));
+          const { data } = await queryFulfilled;
+          batch(async () => {
+            await dispatch(userApi.endpoints.getMe.initiate(null));
+            dispatch(setAccessToken(data.access_token));
+          });
         } catch (error) {}
       },
     }),
-    logoutUser: builder.query<void, void>({
+    logoutUser: builder.mutation<void, void>({
       query() {
         return {
-          url: 'logout',
+          url: 'auth/logout',
           credentials: 'include',
         };
       },
@@ -53,4 +55,8 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginUserMutation, useRegisterUserMutation } = authApi;
+export const {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useLogoutUserMutation,
+} = authApi;

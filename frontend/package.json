@@ -16,6 +16,7 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "async-mutex": "^0.3.2",
     "react": "^18.0.0",
     "react-cookie": "^4.1.1",
     "react-dom": "^18.0.0",

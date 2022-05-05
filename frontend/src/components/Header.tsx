@@ -2,7 +2,6 @@ import {
   AppBar,
   Avatar,
   Box,
-  Button as _Button,
   Container,
   IconButton,
   Toolbar,
@@ -12,12 +11,13 @@ import {
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { useAppDispatch, useAppSelector } from '../redux/store';
-import { logout } from '../redux/features/userSlice';
-import { batch } from 'react-redux';
-import { authApi } from '../redux/api/authApi';
+import { useAppSelector } from '../redux/store';
+import { useLogoutUserMutation } from '../redux/api/authApi';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import { LoadingButton as _LoadingButton } from '@mui/lab';
 
-const Button = styled(_Button)`
+const LoadingButton = styled(_LoadingButton)`
   padding: 0.4rem;
   background-color: #f9d13e;
   color: #2363eb;
@@ -34,15 +34,35 @@ const Header = () => {
   const logged_in = cookies.logged_in;
 
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.userState.user);
 
+  const [logoutUser, { isLoading, isSuccess, error, isError }] =
+    useLogoutUserMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      // window.location.href = '/login';
+      navigate('/login');
+    }
+
+    if (isError) {
+      if (Array.isArray((error as any).data.error)) {
+        (error as any).data.error.forEach((el: any) =>
+          toast.error(el.message, {
+            position: 'top-right',
+          })
+        );
+      } else {
+        toast.error((error as any).data.message, {
+          position: 'top-right',
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
+
   const onLogoutHandler = async () => {
-    batch(() => {
-      dispatch(logout());
-      dispatch(authApi.endpoints.logoutUser.initiate());
-    });
-    window.location.href = '/';
+    logoutUser();
   };
 
   return (
@@ -59,27 +79,33 @@ const Header = () => {
           <Box display='flex' sx={{ ml: 'auto' }}>
             {!logged_in && (
               <>
-                <Button sx={{ mr: 2 }} onClick={() => navigate('/register')}>
+                <LoadingButton
+                  sx={{ mr: 2 }}
+                  onClick={() => navigate('/register')}
+                >
                   SignUp
-                </Button>
-                <Button onClick={() => navigate('/login')}>Login</Button>
+                </LoadingButton>
+                <LoadingButton onClick={() => navigate('/login')}>
+                  Login
+                </LoadingButton>
               </>
             )}
             {logged_in && (
-              <Button
+              <LoadingButton
                 sx={{ backgroundColor: '#eee' }}
                 onClick={onLogoutHandler}
+                loading={isLoading}
               >
                 Logout
-              </Button>
+              </LoadingButton>
             )}
             {logged_in && user?.role === 'admin' && (
-              <Button
+              <LoadingButton
                 sx={{ backgroundColor: '#eee', ml: 2 }}
                 onClick={() => navigate('/admin')}
               >
                 Admin
-              </Button>
+              </LoadingButton>
             )}
             <Box sx={{ ml: 4 }}>
               <Tooltip
