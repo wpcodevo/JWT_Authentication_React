@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { useAppSelector } from '../redux/store';
 import { useLogoutUserMutation } from '../redux/api/authApi';
 import { useEffect } from 'react';
@@ -30,9 +29,6 @@ const LoadingButton = styled(_LoadingButton)`
 `;
 
 const Header = () => {
-  const [cookies] = useCookies(['logged_in']);
-  const logged_in = cookies.logged_in;
-
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.userState.user);
 
@@ -41,8 +37,7 @@ const Header = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      // window.location.href = '/login';
-      navigate('/login');
+      window.location.href = '/login';
     }
 
     if (isError) {
@@ -77,7 +72,7 @@ const Header = () => {
             CodevoWeb
           </Typography>
           <Box display='flex' sx={{ ml: 'auto' }}>
-            {!logged_in && (
+            {!user && (
               <>
                 <LoadingButton
                   sx={{ mr: 2 }}
@@ -90,7 +85,7 @@ const Header = () => {
                 </LoadingButton>
               </>
             )}
-            {logged_in && (
+            {user && (
               <LoadingButton
                 sx={{ backgroundColor: '#eee' }}
                 onClick={onLogoutHandler}
@@ -99,7 +94,7 @@ const Header = () => {
                 Logout
               </LoadingButton>
             )}
-            {logged_in && user?.role === 'admin' && (
+            {user && user?.role === 'admin' && (
               <LoadingButton
                 sx={{ backgroundColor: '#eee', ml: 2 }}
                 onClick={() => navigate('/admin')}

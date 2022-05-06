@@ -8,7 +8,7 @@ const RequireUser = ({ allowedRoles }: { allowedRoles: string[] }) => {
   const location = useLocation();
 
   const { isLoading, isFetching } = userApi.endpoints.getMe.useQuery(null, {
-    skip: !!cookies.logged_in,
+    skip: false,
     refetchOnMountOrArgChange: true,
   });
 
