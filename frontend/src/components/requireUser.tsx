@@ -8,7 +8,7 @@ const RequireUser = ({ allowedRoles }: { allowedRoles: string[] }) => {
   const location = useLocation();
 
   const { isLoading, isFetching } = userApi.endpoints.getMe.useQuery(null, {
-    skip: !!cookies.logged_in,
+    skip: false,
     refetchOnMountOrArgChange: true,
   });
 
@@ -21,9 +21,6 @@ const RequireUser = ({ allowedRoles }: { allowedRoles: string[] }) => {
   if (loading) {
     return <FullScreenLoader />;
   }
-
-  console.log(cookies.logged_in);
-  console.log({ user });
 
   return (cookies.logged_in || user) &&
     allowedRoles.includes(user?.role as string) ? (

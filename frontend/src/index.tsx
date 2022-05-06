@@ -1,4 +1,5 @@
 import React from 'react';
+import { CookiesProvider } from 'react-cookie';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -13,9 +14,11 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
-        <AuthMiddleware>
-          <App />
-        </AuthMiddleware>
+        <CookiesProvider>
+          <AuthMiddleware>
+            <App />
+          </AuthMiddleware>
+        </CookiesProvider>
       </Router>
     </Provider>
   </React.StrictMode>
