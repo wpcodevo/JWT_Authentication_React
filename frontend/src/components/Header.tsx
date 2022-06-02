@@ -1,34 +1,27 @@
-import {
-  AppBar,
-  Avatar,
-  Box,
-  Container,
-  IconButton,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../redux/store';
 import { useLogoutUserMutation } from '../redux/api/authApi';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { LoadingButton as _LoadingButton } from '@mui/lab';
+import PostModal from './modals/post.modal';
+import CreatePost from './post/create-post';
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.4rem;
-  background-color: #f9d13e;
-  color: #2363eb;
+  color: #fff;
   font-weight: 500;
 
   &:hover {
-    background-color: #ebc22c;
+    color: #f1f1f1;
     transform: translateY(-2px);
   }
 `;
 
 const Header = () => {
+  const [openPostModal, setOpenPostModal] = useState(false);
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.userState.user);
 
@@ -61,61 +54,62 @@ const Header = () => {
   };
 
   return (
-    <AppBar position='static'>
-      <Container maxWidth='lg'>
-        <Toolbar>
-          <Typography
-            variant='h6'
-            onClick={() => navigate('/')}
-            sx={{ cursor: 'pointer' }}
-          >
-            CodevoWeb
-          </Typography>
-          <Box display='flex' sx={{ ml: 'auto' }}>
-            {!user && (
-              <>
+    <>
+      <AppBar position='static' sx={{ backgroundColor: '#2363eb' }}>
+        <Container maxWidth='lg'>
+          <Toolbar>
+            <Typography
+              variant='h6'
+              onClick={() => navigate('/')}
+              sx={{ cursor: 'pointer' }}
+            >
+              CodevoWeb
+            </Typography>
+            <Box display='flex' sx={{ ml: 'auto' }}>
+              {!user && (
+                <>
+                  <LoadingButton
+                    sx={{ mr: 2 }}
+                    onClick={() => navigate('/register')}
+                  >
+                    SignUp
+                  </LoadingButton>
+                  <LoadingButton onClick={() => navigate('/login')}>
+                    Login
+                  </LoadingButton>
+                </>
+              )}
+              {user && (
                 <LoadingButton
-                  sx={{ mr: 2 }}
-                  onClick={() => navigate('/register')}
+                  sx={{ backgroundColor: '#eee' }}
+                  onClick={onLogoutHandler}
+                  loading={isLoading}
                 >
-                  SignUp
+                  Logout
                 </LoadingButton>
-                <LoadingButton onClick={() => navigate('/login')}>
-                  Login
+              )}
+              {user && user?.role === 'admin' && (
+                <LoadingButton
+                  sx={{ backgroundColor: '#eee', ml: 2 }}
+                  onClick={() => navigate('/admin')}
+                >
+                  Admin
                 </LoadingButton>
-              </>
-            )}
-            {user && (
-              <LoadingButton
-                sx={{ backgroundColor: '#eee' }}
-                onClick={onLogoutHandler}
-                loading={isLoading}
-              >
-                Logout
+              )}
+              <LoadingButton onClick={() => setOpenPostModal(true)}>
+                Create Post
               </LoadingButton>
-            )}
-            {user && user?.role === 'admin' && (
-              <LoadingButton
-                sx={{ backgroundColor: '#eee', ml: 2 }}
-                onClick={() => navigate('/admin')}
-              >
-                Admin
-              </LoadingButton>
-            )}
-            <Box sx={{ ml: 4 }}>
-              <Tooltip
-                title='Post settings'
-                onClick={() => navigate('/profile')}
-              >
-                <IconButton sx={{ p: 0 }}>
-                  <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
-                </IconButton>
-              </Tooltip>
             </Box>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+          </Toolbar>
+        </Container>
+      </AppBar>
+      <PostModal
+        openPostModal={openPostModal}
+        setOpenPostModal={setOpenPostModal}
+      >
+        <CreatePost setOpenPostModal={setOpenPostModal} />
+      </PostModal>
+    </>
   );
 };
 

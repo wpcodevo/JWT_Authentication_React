@@ -26,7 +26,7 @@ const ProfilePage = () => {
       </Box>
       <Box sx={{ mt: 2 }}>
         <Typography gutterBottom>
-          <strong>Id:</strong> {user?._id}
+          <strong>Id:</strong> {user?.id}
         </Typography>
         <Typography gutterBottom>
           <strong>Full Name:</strong> {user?.name}

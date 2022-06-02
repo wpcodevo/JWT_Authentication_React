@@ -1,26 +1,19 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Container, Grid } from '@mui/material';
+import PostItem from '../components/post/post.component';
 
 const HomePage = () => {
   return (
-    <Container maxWidth='lg'>
-      <Box
-        sx={{
-          backgroundColor: '#ece9e9',
-          mt: '2rem',
-          height: '15rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+    <Container maxWidth={false} sx={{ backgroundColor: '#2363eb' }}>
+      <Grid
+        container
+        rowGap={5}
+        maxWidth='lg'
+        sx={{ margin: '0 auto', pt: '5rem' }}
       >
-        <Typography
-          variant='h2'
-          component='h1'
-          sx={{ color: '#1f1e1e', fontWeight: 500 }}
-        >
-          Home Page
-        </Typography>
-      </Box>
+        {Array.from(Array(12).keys()).map((_, i) => (
+          <PostItem key={i + 1} />
+        ))}
+      </Grid>
     </Container>
   );
 };

@@ -2,14 +2,14 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { LoginInput } from '../../pages/login.page';
 import { RegisterInput } from '../../pages/register.page';
 import customFetchBase from './customFetchBase';
-import { IUser } from './types';
+import { GenericResponse, IResetPasswordRequest } from './types';
 import { userApi } from './userApi';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: customFetchBase,
   endpoints: (builder) => ({
-    registerUser: builder.mutation<IUser, RegisterInput>({
+    registerUser: builder.mutation<GenericResponse, RegisterInput>({
       query(data) {
         return {
           url: 'auth/register',
@@ -17,8 +17,6 @@ export const authApi = createApi({
           body: data,
         };
       },
-      transformResponse: (result: { data: { user: IUser } }) =>
-        result.data.user,
     }),
     loginUser: builder.mutation<
       { access_token: string; status: string },
@@ -47,6 +45,34 @@ export const authApi = createApi({
         };
       },
     }),
+    verifyEmail: builder.mutation<GenericResponse, string>({
+      query(verificationCode) {
+        return {
+          url: `auth/verifyemail/${verificationCode}`,
+          credentials: 'include',
+        };
+      },
+    }),
+    forgotPassword: builder.mutation<GenericResponse, { email: string }>({
+      query(body) {
+        return {
+          url: `auth/forgotpassword`,
+          method: 'POST',
+          credentials: 'include',
+          body,
+        };
+      },
+    }),
+    resetPassword: builder.mutation<GenericResponse, IResetPasswordRequest>({
+      query({ resetToken, password, passwordConfirm }) {
+        return {
+          url: `auth/resetpassword/${resetToken}`,
+          method: 'PATCH',
+          body: { password, passwordConfirm },
+          credentials: 'include',
+        };
+      },
+    }),
   }),
 });
 
@@ -54,4 +80,7 @@ export const {
   useLoginUserMutation,
   useRegisterUserMutation,
   useLogoutUserMutation,
+  useVerifyEmailMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = authApi;

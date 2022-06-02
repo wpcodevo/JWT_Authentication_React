@@ -5,10 +5,10 @@ import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormInput from '../components/FormInput';
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useRegisterUserMutation } from '../redux/api/authApi';
+import { useNavigate, useParams } from 'react-router-dom';
 import { LoadingButton as _LoadingButton } from '@mui/lab';
 import { toast } from 'react-toastify';
+import { useResetPasswordMutation } from '../redux/api/authApi';
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.6rem 0;
@@ -22,39 +22,28 @@ const LoadingButton = styled(_LoadingButton)`
   }
 `;
 
-const LinkItem = styled(Link)`
-  text-decoration: none;
-  color: #2363eb;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const registerSchema = object({
-  name: string().nonempty('Full name is required').max(100),
-  email: string()
-    .nonempty('Email address is required')
-    .email('Email Address is invalid'),
+const resetPasswordSchema = object({
   password: string()
     .nonempty('Password is required')
-    .min(8, 'Password must be more than 8 characters')
-    .max(32, 'Password must be less than 32 characters'),
+    .min(8, 'Password must be more than 8 characters'),
   passwordConfirm: string().nonempty('Please confirm your password'),
 }).refine((data) => data.password === data.passwordConfirm, {
-  path: ['passwordConfirm'],
   message: 'Passwords do not match',
+  path: ['passwordConfirm'],
 });
 
-export type RegisterInput = TypeOf<typeof registerSchema>;
+export type ResetPasswordInput = TypeOf<typeof resetPasswordSchema>;
 
-const RegisterPage = () => {
-  const methods = useForm<RegisterInput>({
-    resolver: zodResolver(registerSchema),
+const ResetPasswordPage = () => {
+  const { resetToken } = useParams<{ resetToken: string }>();
+
+  const methods = useForm<ResetPasswordInput>({
+    resolver: zodResolver(resetPasswordSchema),
   });
 
-  // 👇 Calling the Register Mutation
-  const [registerUser, { isLoading, isSuccess, error, isError, data }] =
-    useRegisterUserMutation();
+  // 👇 API Login Mutation
+  const [resetPassword, { isLoading, isError, error, isSuccess }] =
+    useResetPasswordMutation();
 
   const navigate = useNavigate();
 
@@ -66,8 +55,10 @@ const RegisterPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success(data?.message);
-      navigate('/verifyemail');
+      navigate('/login');
+      toast.success('Password updated successfully, login', {
+        position: 'top-right',
+      });
     }
 
     if (isError) {
@@ -93,9 +84,8 @@ const RegisterPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful]);
 
-  const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
-    // 👇 Executing the RegisterUser Mutation
-    registerUser(values);
+  const onSubmitHandler: SubmitHandler<ResetPasswordInput> = (values) => {
+    resetPassword({ ...values, resetToken: resetToken! });
   };
 
   return (
@@ -122,18 +112,26 @@ const RegisterPage = () => {
           component='h1'
           sx={{
             color: '#f9d13e',
-            fontSize: { xs: '2rem', md: '3rem' },
             fontWeight: 600,
+            fontSize: { xs: '2rem', md: '3rem' },
             mb: 2,
             letterSpacing: 1,
           }}
         >
-          Welcome to CodevoWeb!
-        </Typography>
-        <Typography component='h2' sx={{ color: '#e5e7eb', mb: 2 }}>
-          Sign Up To Get Started!
+          Reset Password
         </Typography>
 
+        <Typography
+          sx={{
+            fontSize: 15,
+            width: '100%',
+            textAlign: 'center',
+            mb: '1rem',
+            color: 'white',
+          }}
+        >
+          Please enter a new password
+        </Typography>
         <FormProvider {...methods}>
           <Box
             component='form'
@@ -148,18 +146,12 @@ const RegisterPage = () => {
               borderRadius: 2,
             }}
           >
-            <FormInput name='name' label='Full Name' />
-            <FormInput name='email' label='Email Address' type='email' />
             <FormInput name='password' label='Password' type='password' />
             <FormInput
               name='passwordConfirm'
               label='Confirm Password'
               type='password'
             />
-            <Typography sx={{ fontSize: '0.9rem', mb: '1rem' }}>
-              Already have an account?{' '}
-              <LinkItem to='/login'>Login Here</LinkItem>
-            </Typography>
 
             <LoadingButton
               variant='contained'
@@ -169,7 +161,7 @@ const RegisterPage = () => {
               type='submit'
               loading={isLoading}
             >
-              Sign Up
+              Reset Password
             </LoadingButton>
           </Box>
         </FormProvider>
@@ -178,4 +170,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default ResetPasswordPage;

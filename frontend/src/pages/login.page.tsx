@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography, Link as MuiLink } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
@@ -9,6 +9,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LoadingButton as _LoadingButton } from '@mui/lab';
 import { toast } from 'react-toastify';
 import { useLoginUserMutation } from '../redux/api/authApi';
+import { ReactComponent as GoogleLogo } from '../assets/google.svg';
+import { getGoogleUrl } from '../utils/getGoogleUrl';
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.6rem 0;
@@ -152,8 +154,12 @@ const LoginPage = () => {
             <FormInput name='email' label='Email Address' type='email' />
             <FormInput name='password' label='Password' type='password' />
 
-            <Typography sx={{ fontSize: '0.9rem', mb: '1rem' }}>
-              Need an account? <LinkItem to='/register'>Sign Up Here</LinkItem>
+            <Typography
+              sx={{ fontSize: '0.9rem', mb: '1rem', textAlign: 'right' }}
+            >
+              <LinkItem to='/forgotpassword' style={{ color: '#333' }}>
+                Forgot Password?
+              </LinkItem>
             </Typography>
 
             <LoadingButton
@@ -166,8 +172,56 @@ const LoginPage = () => {
             >
               Login
             </LoadingButton>
+
+            <Typography sx={{ fontSize: '0.9rem', mt: '1rem' }}>
+              Need an account? <LinkItem to='/register'>Sign Up Here</LinkItem>
+            </Typography>
           </Box>
         </FormProvider>
+        <Typography
+          variant='h6'
+          component='p'
+          sx={{
+            my: '1.5rem',
+            textAlign: 'center',
+            color: 'white',
+          }}
+        >
+          Log in with another provider:
+        </Typography>
+        <Box
+          maxWidth='27rem'
+          width='100%'
+          sx={{
+            backgroundColor: '#e5e7eb',
+            p: { xs: '1rem', sm: '2rem' },
+            borderRadius: 2,
+          }}
+        >
+          <MuiLink
+            href={getGoogleUrl(from)}
+            sx={{
+              backgroundColor: '#f5f6f7',
+              borderRadius: 1,
+              py: '0.6rem',
+              columnGap: '1rem',
+              textDecoration: 'none',
+              color: '#393e45',
+              cursor: 'pointer',
+              fontWeight: 500,
+              '&:hover': {
+                backgroundColor: '#fff',
+                boxShadow: '0 1px 13px 0 rgb(0 0 0 / 15%)',
+              },
+            }}
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+          >
+            <GoogleLogo style={{ height: '2rem' }} />
+            Google
+          </MuiLink>
+        </Box>
       </Box>
     </Container>
   );

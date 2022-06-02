@@ -5,10 +5,10 @@ import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormInput from '../components/FormInput';
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useRegisterUserMutation } from '../redux/api/authApi';
+import { Link } from 'react-router-dom';
 import { LoadingButton as _LoadingButton } from '@mui/lab';
 import { toast } from 'react-toastify';
+import { useForgotPasswordMutation } from '../redux/api/authApi';
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.6rem 0;
@@ -22,41 +22,22 @@ const LoadingButton = styled(_LoadingButton)`
   }
 `;
 
-const LinkItem = styled(Link)`
-  text-decoration: none;
-  color: #2363eb;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const registerSchema = object({
-  name: string().nonempty('Full name is required').max(100),
+const forgotPasswordSchema = object({
   email: string()
     .nonempty('Email address is required')
     .email('Email Address is invalid'),
-  password: string()
-    .nonempty('Password is required')
-    .min(8, 'Password must be more than 8 characters')
-    .max(32, 'Password must be less than 32 characters'),
-  passwordConfirm: string().nonempty('Please confirm your password'),
-}).refine((data) => data.password === data.passwordConfirm, {
-  path: ['passwordConfirm'],
-  message: 'Passwords do not match',
 });
 
-export type RegisterInput = TypeOf<typeof registerSchema>;
+export type ForgotPasswordInput = TypeOf<typeof forgotPasswordSchema>;
 
-const RegisterPage = () => {
-  const methods = useForm<RegisterInput>({
-    resolver: zodResolver(registerSchema),
+const ForgotPasswordPage = () => {
+  const methods = useForm<ForgotPasswordInput>({
+    resolver: zodResolver(forgotPasswordSchema),
   });
 
-  // 👇 Calling the Register Mutation
-  const [registerUser, { isLoading, isSuccess, error, isError, data }] =
-    useRegisterUserMutation();
-
-  const navigate = useNavigate();
+  // 👇 API Login Mutation
+  const [forgotPassword, { isLoading, isError, error, isSuccess, data }] =
+    useForgotPasswordMutation();
 
   const {
     reset,
@@ -67,10 +48,9 @@ const RegisterPage = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success(data?.message);
-      navigate('/verifyemail');
     }
-
     if (isError) {
+      console.log(error);
       if (Array.isArray((error as any).data.error)) {
         (error as any).data.error.forEach((el: any) =>
           toast.error(el.message, {
@@ -93,10 +73,52 @@ const RegisterPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful]);
 
-  const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
-    // 👇 Executing the RegisterUser Mutation
-    registerUser(values);
+  const onSubmitHandler: SubmitHandler<ForgotPasswordInput> = ({ email }) => {
+    // 👇 Executing the forgotPassword Mutation
+    forgotPassword({ email });
   };
+
+  if (isSuccess) {
+    return (
+      <Container
+        maxWidth={false}
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: '#2363eb',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+          }}
+        >
+          <Box
+            maxWidth='27rem'
+            width='100%'
+            height='13rem'
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#fff',
+              p: { xs: '1rem', sm: '2rem' },
+              borderRadius: 2,
+            }}
+          >
+            <Typography textAlign='center' component='h5'>
+              We have sent you a password recovery email.
+            </Typography>
+          </Box>
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <Container
@@ -122,16 +144,25 @@ const RegisterPage = () => {
           component='h1'
           sx={{
             color: '#f9d13e',
-            fontSize: { xs: '2rem', md: '3rem' },
             fontWeight: 600,
+            fontSize: { xs: '2rem', md: '3rem' },
             mb: 2,
             letterSpacing: 1,
           }}
         >
-          Welcome to CodevoWeb!
+          Forgot Password
         </Typography>
-        <Typography component='h2' sx={{ color: '#e5e7eb', mb: 2 }}>
-          Sign Up To Get Started!
+        <Typography
+          sx={{
+            fontSize: 15,
+            width: '100%',
+            textAlign: 'center',
+            mb: '1rem',
+            color: 'white',
+          }}
+        >
+          Enter your email address and we’ll send you a link to reset your
+          password.
         </Typography>
 
         <FormProvider {...methods}>
@@ -148,18 +179,7 @@ const RegisterPage = () => {
               borderRadius: 2,
             }}
           >
-            <FormInput name='name' label='Full Name' />
             <FormInput name='email' label='Email Address' type='email' />
-            <FormInput name='password' label='Password' type='password' />
-            <FormInput
-              name='passwordConfirm'
-              label='Confirm Password'
-              type='password'
-            />
-            <Typography sx={{ fontSize: '0.9rem', mb: '1rem' }}>
-              Already have an account?{' '}
-              <LinkItem to='/login'>Login Here</LinkItem>
-            </Typography>
 
             <LoadingButton
               variant='contained'
@@ -169,8 +189,16 @@ const RegisterPage = () => {
               type='submit'
               loading={isLoading}
             >
-              Sign Up
+              Retrieve Password
             </LoadingButton>
+
+            <Typography
+              sx={{ fontSize: '0.9rem', mt: '1rem', textAlign: 'center' }}
+            >
+              <Link to='/login' style={{ color: '#333' }}>
+                Back to Login
+              </Link>
+            </Typography>
           </Box>
         </FormProvider>
       </Box>
@@ -178,4 +206,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default ForgotPasswordPage;

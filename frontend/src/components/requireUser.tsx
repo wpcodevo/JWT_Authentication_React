@@ -22,9 +22,6 @@ const RequireUser = ({ allowedRoles }: { allowedRoles: string[] }) => {
     return <FullScreenLoader />;
   }
 
-  console.log(cookies.logged_in);
-  console.log({ user });
-
   return (cookies.logged_in || user) &&
     allowedRoles.includes(user?.role as string) ? (
     <Outlet />
