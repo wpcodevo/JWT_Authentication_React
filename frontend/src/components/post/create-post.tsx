@@ -1,34 +1,36 @@
-import { Box, TextareaAutosize, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  TextareaAutosize,
+  TextField,
+  Typography,
+} from '@mui/material';
 import {
   Controller,
   FormProvider,
   SubmitHandler,
   useForm,
 } from 'react-hook-form';
-import { object, string, z } from 'zod';
+import { object, string, TypeOf, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FileUpload from '../FileUpload/FileUpload';
 import { LoadingButton } from '@mui/lab';
 import { FC, useEffect } from 'react';
-import { pickBy } from 'lodash';
 import { toast } from 'react-toastify';
 import { useCreatePostMutation } from '../../redux/api/postApi';
-
-interface ICreatePost {
-  name: string;
-  description?: string;
-  photo?: File;
-}
 
 interface ICreatePostProp {
   setOpenPostModal: (openPostModal: boolean) => void;
 }
 
 const createPostSchema = object({
-  name: string().nonempty('Post name is required'),
-  description: string().max(50).optional(),
+  title: string().nonempty('Title is required'),
+  content: string().max(50).nonempty('Content is required'),
+  category: string().max(50).nonempty('Category is required'),
   image: z.instanceof(File),
 });
+
+export type ICreatePost = TypeOf<typeof createPostSchema>;
 
 const CreatePost: FC<ICreatePostProp> = ({ setOpenPostModal }) => {
   const [createPost, { isLoading, isError, error, isSuccess }] =
@@ -69,15 +71,9 @@ const CreatePost: FC<ICreatePostProp> = ({ setOpenPostModal }) => {
 
   const onSubmitHandler: SubmitHandler<ICreatePost> = (values) => {
     const formData = new FormData();
-    const filteredFormData = pickBy(
-      values,
-      (value) => value !== '' && value !== undefined
-    );
-    const { image, ...otherFormData } = filteredFormData;
-    if (image) {
-      formData.append('image', image);
-    }
-    formData.append('data', JSON.stringify(otherFormData));
+
+    formData.append('image', values.image);
+    formData.append('data', JSON.stringify(values));
     createPost(formData);
   };
 
@@ -87,7 +83,7 @@ const CreatePost: FC<ICreatePostProp> = ({ setOpenPostModal }) => {
         <Typography variant='h5' component='h1'>
           Create Post
         </Typography>
-        {isLoading && <p>loading...</p>}
+        {isLoading && <CircularProgress size='1rem' color='primary' />}
       </Box>
       <FormProvider {...methods}>
         <Box
@@ -97,14 +93,19 @@ const CreatePost: FC<ICreatePostProp> = ({ setOpenPostModal }) => {
           onSubmit={methods.handleSubmit(onSubmitHandler)}
         >
           <TextField
-            name='name'
-            label='Post Name'
+            label='Post Title'
             fullWidth
-            type='text'
             sx={{ mb: '1rem' }}
+            {...methods.register('title')}
+          />
+          <TextField
+            label='Category'
+            fullWidth
+            sx={{ mb: '1rem' }}
+            {...methods.register('category')}
           />
           <Controller
-            name='description'
+            name='content'
             control={methods.control}
             defaultValue=''
             render={({ field }) => (

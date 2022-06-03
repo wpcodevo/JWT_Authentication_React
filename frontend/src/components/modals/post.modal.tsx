@@ -19,6 +19,7 @@ const MODAL_STYLES: CSSProperties = {
   transform: 'translateX(-50%)',
   transition: 'all 300ms ease',
   backgroundColor: 'white',
+  overflowY: 'scroll',
   zIndex: 1000,
 };
 

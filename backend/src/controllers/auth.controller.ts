@@ -2,6 +2,8 @@ import config from 'config';
 import { CookieOptions, NextFunction, Request, Response } from 'express';
 import { CreateUserInput, LoginUserInput } from '../schema/user.schema';
 import {
+  getGithubOathToken,
+  getGithubUser,
   getGoogleOauthToken,
   getGoogleUser,
 } from '../services/session.service';
@@ -244,6 +246,63 @@ export const googleOauthHandler = async (
     res.redirect(`${config.get<string>('origin')}${pathUrl}`);
   } catch (err: any) {
     console.log('Failed to authorize Google User', err);
+    return res.redirect(`${config.get<string>('origin')}/oauth/error`);
+  }
+};
+
+export const githubOauthHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // Get the code from the query
+    const code = req.query.code as string;
+    const pathUrl = (req.query.state as string) ?? '/';
+
+    if (req.query.error) {
+      return res.redirect(`${config.get<string>('origin')}/login`);
+    }
+
+    if (!code) {
+      return next(new AppError('Authorization code not provided!', 401));
+    }
+
+    // Get the user the access_token with the code
+    const { access_token } = await getGithubOathToken({ code });
+
+    // Get the user with the access_token
+    const { email, avatar_url, login } = await getGithubUser({ access_token });
+
+    // Create new user or update user if user already exist
+    const user = await findAndUpdateUser(
+      { email },
+      {
+        email,
+        photo: avatar_url,
+        name: login,
+        provider: 'GitHub',
+        verified: true,
+      },
+      { runValidators: false, new: true, upsert: true }
+    );
+
+    if (!user) {
+      return res.redirect(`${config.get<string>('origin')}/oauth/error`);
+    }
+
+    // Create access and refresh tokens
+    const { access_token: accessToken, refresh_token } = await signToken(user);
+
+    res.cookie('access_token', accessToken, accessTokenCookieOptions);
+    res.cookie('refresh_token', refresh_token, refreshTokenCookieOptions);
+    res.cookie('logged_in', true, {
+      ...accessTokenCookieOptions,
+      httpOnly: false,
+    });
+
+    res.redirect(`${config.get<string>('origin')}${pathUrl}`);
+  } catch (err: any) {
     return res.redirect(`${config.get<string>('origin')}/oauth/error`);
   }
 };

@@ -14,8 +14,6 @@ const AuthMiddleware: React.FC<IAuthMiddleware> = ({ children }) => {
     skip: !cookies.logged_in,
   });
 
-  console.log('From middleware: ', cookies.logged_in);
-
   if (isLoading) {
     return <FullScreenLoader />;
   }

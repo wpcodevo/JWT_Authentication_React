@@ -11,22 +11,29 @@ import {
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import CartImage from '../../assets/cat.jpg';
-import './post.styles.scss';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import PostModal from '../modals/post.modal';
 import { useDeletePostMutation } from '../../redux/api/postApi';
 import { toast } from 'react-toastify';
 import UpdatePost from './update-post';
+import { IPostResponse } from '../../redux/api/types';
+import { format, parseISO } from 'date-fns';
+import './post.styles.scss';
 
-const PostItem = () => {
+const SERVER_ENDPOINT = process.env.REACT_APP_SERVER_ENDPOINT;
+
+interface IPostItemProps {
+  post: IPostResponse;
+}
+
+const PostItem: FC<IPostItemProps> = ({ post }) => {
   const [openPostModal, setOpenPostModal] = useState(false);
   const [deletePost, { isLoading, error, isSuccess, isError }] =
     useDeletePostMutation();
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success('Post created successfully');
+      toast.success('Post deleted successfully');
     }
 
     if (isError) {
@@ -45,6 +52,12 @@ const PostItem = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
+  const onDeleteHandler = (id: string) => {
+    if (window.confirm('Are you sure')) {
+      deletePost(id);
+    }
+  };
+
   return (
     <>
       <Grid item xs={12} md={6} lg={4}>
@@ -52,7 +65,7 @@ const PostItem = () => {
           <CardMedia
             component='img'
             height='250'
-            image={CartImage}
+            image={`${SERVER_ENDPOINT}/api/static/posts/${post.image}`}
             alt='green iguana'
             sx={{ p: '1rem 1rem 0' }}
           />
@@ -63,7 +76,7 @@ const PostItem = () => {
               component='div'
               sx={{ color: '#4d4d4d', fontWeight: 'bold' }}
             >
-              How to Train a Dachshund Puppy
+              {post.title}
             </Typography>
             <Box display='flex' alignItems='center' sx={{ mt: '1rem' }}>
               <Typography
@@ -75,7 +88,7 @@ const PostItem = () => {
                   mr: '1rem',
                 }}
               >
-                Lizards
+                {post.category}
               </Typography>
               <Typography
                 variant='body2'
@@ -83,7 +96,7 @@ const PostItem = () => {
                   color: '#ffa238',
                 }}
               >
-                July 25th, 2021
+                {format(parseISO(post.created_at), 'PPP')}
               </Typography>
             </Box>
           </CardContent>
@@ -95,7 +108,10 @@ const PostItem = () => {
               sx={{ px: '0.5rem' }}
             >
               <Box display='flex' alignItems='center'>
-                <Avatar alt='cart image' src={CartImage} />
+                <Avatar
+                  alt='cart image'
+                  src={`${SERVER_ENDPOINT}/api/static/users/${post.user.photo}`}
+                />
                 <Typography
                   variant='body2'
                   sx={{
@@ -117,7 +133,7 @@ const PostItem = () => {
                     />
                     Edit
                   </li>
-                  <li onClick={() => deletePost('8484494jjdjdkd')}>
+                  <li onClick={() => onDeleteHandler(post.id)}>
                     <DeleteOutlinedIcon
                       fontSize='small'
                       sx={{ mr: '0.6rem' }}
@@ -134,7 +150,7 @@ const PostItem = () => {
         openPostModal={openPostModal}
         setOpenPostModal={setOpenPostModal}
       >
-        <UpdatePost setOpenPostModal={setOpenPostModal} />
+        <UpdatePost setOpenPostModal={setOpenPostModal} post={post} />
       </PostModal>
     </>
   );

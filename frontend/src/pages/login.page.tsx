@@ -10,7 +10,10 @@ import { LoadingButton as _LoadingButton } from '@mui/lab';
 import { toast } from 'react-toastify';
 import { useLoginUserMutation } from '../redux/api/authApi';
 import { ReactComponent as GoogleLogo } from '../assets/google.svg';
+import { ReactComponent as GitHubLogo } from '../assets/github.svg';
+
 import { getGoogleUrl } from '../utils/getGoogleUrl';
+import { getGitHubUrl } from '../utils/getGithubUrl';
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.6rem 0;
@@ -220,6 +223,30 @@ const LoginPage = () => {
           >
             <GoogleLogo style={{ height: '2rem' }} />
             Google
+          </MuiLink>
+          <MuiLink
+            href={getGitHubUrl(from)}
+            sx={{
+              backgroundColor: '#f5f6f7',
+              borderRadius: 1,
+              py: '0.6rem',
+              mt: '1.5rem',
+              columnGap: '1rem',
+              textDecoration: 'none',
+              color: '#393e45',
+              cursor: 'pointer',
+              fontWeight: 500,
+              '&:hover': {
+                backgroundColor: '#fff',
+                boxShadow: '0 1px 13px 0 rgb(0 0 0 / 15%)',
+              },
+            }}
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+          >
+            <GitHubLogo style={{ height: '2rem' }} />
+            GitHub
           </MuiLink>
         </Box>
       </Box>

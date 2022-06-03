@@ -2,10 +2,11 @@ export interface IUser {
   name: string;
   email: string;
   role: string;
+  photo: string;
   _id: string;
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: string;
+  updated_at: string;
   __v: number;
 }
 
@@ -20,8 +21,8 @@ export interface IResetPasswordRequest {
   passwordConfirm: string;
 }
 
-export interface ICreatePostRequest {
-  name: string;
+export interface IPostRequest {
+  title: string;
   content: string;
   image: string;
   user: string;
@@ -29,10 +30,11 @@ export interface ICreatePostRequest {
 
 export interface IPostResponse {
   id: string;
-  name: string;
+  title: string;
   content: string;
   image: string;
-  user: string;
-  createdAt: Date;
-  updatedAt: Date;
+  category: string;
+  user: IUser;
+  created_at: string;
+  updated_at: string;
 }

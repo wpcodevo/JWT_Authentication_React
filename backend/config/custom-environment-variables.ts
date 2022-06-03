@@ -10,4 +10,8 @@ export default {
   googleClientId: 'GOOGLE_OAUTH_CLIENT_ID',
   googleClientSecret: 'GOOGLE_OAUTH_CLIENT_SECRET',
   googleOauthRedirect: 'GOOGLE_OAUTH_REDIRECT_URL',
+
+  githubClientId: 'GITHUB_OAUTH_CLIENT_ID',
+  githubClientSecret: 'GITHUB_OAUTH_CLIENT_SECRET',
+  githubOauthRedirect: 'GITHUB_OAUTH_REDIRECT_URL',
 };

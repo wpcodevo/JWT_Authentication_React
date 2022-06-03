@@ -1,11 +1,17 @@
-import { Box, TextareaAutosize, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  TextareaAutosize,
+  TextField,
+  Typography,
+} from '@mui/material';
 import {
   Controller,
   FormProvider,
   SubmitHandler,
   useForm,
 } from 'react-hook-form';
-import { object, string, z } from 'zod';
+import { object, string, TypeOf, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FileUpload from '../FileUpload/FileUpload';
 import { LoadingButton } from '@mui/lab';
@@ -13,40 +19,33 @@ import { FC, useEffect } from 'react';
 import { pickBy } from 'lodash';
 import { toast } from 'react-toastify';
 import { useUpdatePostMutation } from '../../redux/api/postApi';
-
-interface IUpdatePost {
-  name: string;
-  description?: string;
-  photo?: File;
-}
+import { IPostResponse } from '../../redux/api/types';
 
 interface IUpdatePostProp {
   setOpenPostModal: (openPostModal: boolean) => void;
+  post: IPostResponse;
 }
 
 const updatePostSchema = object({
-  name: string().nonempty('Post name is required'),
-  description: string().max(50).optional(),
+  title: string(),
+  content: string().max(50),
+  category: string().max(50),
   image: z.instanceof(File),
-});
+}).partial();
 
-const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal }) => {
+type IUpdatePost = TypeOf<typeof updatePostSchema>;
+
+const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal, post }) => {
   const [updatePost, { isLoading, isError, error, isSuccess }] =
     useUpdatePostMutation();
 
-  const defaultValues: IUpdatePost = {
-    name: '',
-    description: '',
-  };
-
   const methods = useForm<IUpdatePost>({
     resolver: zodResolver(updatePostSchema),
-    defaultValues,
   });
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success('Post created successfully');
+      toast.success('Post updated successfully');
       setOpenPostModal(false);
     }
 
@@ -73,6 +72,17 @@ const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [methods.formState.isSubmitting]);
 
+  useEffect(() => {
+    if (post) {
+      methods.reset({
+        title: post.title,
+        category: post.category,
+        content: post.content,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [post]);
+
   const onSubmitHandler: SubmitHandler<IUpdatePost> = (values) => {
     const formData = new FormData();
     const filteredFormData = pickBy(
@@ -84,7 +94,7 @@ const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal }) => {
       formData.append('image', image);
     }
     formData.append('data', JSON.stringify(otherFormData));
-    updatePost({ id: 'ff', post: formData });
+    updatePost({ id: post?.id!, post: formData });
   };
 
   return (
@@ -93,7 +103,7 @@ const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal }) => {
         <Typography variant='h5' component='h1'>
           Edit Post
         </Typography>
-        {isLoading && <p>loading...</p>}
+        {isLoading && <CircularProgress size='1rem' color='primary' />}
       </Box>
       <FormProvider {...methods}>
         <Box
@@ -103,14 +113,19 @@ const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal }) => {
           onSubmit={methods.handleSubmit(onSubmitHandler)}
         >
           <TextField
-            name='name'
-            label='Post Name'
+            label='Title'
             fullWidth
-            type='text'
             sx={{ mb: '1rem' }}
+            {...methods.register('title')}
+          />
+          <TextField
+            label='Category'
+            fullWidth
+            sx={{ mb: '1rem' }}
+            {...methods.register('category')}
           />
           <Controller
-            name='description'
+            name='content'
             control={methods.control}
             defaultValue=''
             render={({ field }) => (
