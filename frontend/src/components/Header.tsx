@@ -11,11 +11,12 @@ import CreatePost from './post/create-post';
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.4rem;
-  color: #fff;
+  color: #222;
   font-weight: 500;
+  border: 2px solid #222;
+  margin-right: 1rem;
 
   &:hover {
-    color: #f1f1f1;
     transform: translateY(-2px);
   }
 `;
@@ -55,13 +56,13 @@ const Header = () => {
 
   return (
     <>
-      <AppBar position='static' sx={{ backgroundColor: '#2363eb' }}>
+      <AppBar position='static' sx={{ backgroundColor: '#fff' }}>
         <Container maxWidth='lg'>
           <Toolbar>
             <Typography
               variant='h6'
               onClick={() => navigate('/')}
-              sx={{ cursor: 'pointer' }}
+              sx={{ cursor: 'pointer', color: '#222', fontWeight: 700 }}
             >
               CodevoWeb
             </Typography>
@@ -80,17 +81,13 @@ const Header = () => {
                 </>
               )}
               {user && (
-                <LoadingButton
-                  sx={{ backgroundColor: '#eee' }}
-                  onClick={onLogoutHandler}
-                  loading={isLoading}
-                >
+                <LoadingButton onClick={onLogoutHandler} loading={isLoading}>
                   Logout
                 </LoadingButton>
               )}
               {user && user?.role === 'admin' && (
                 <LoadingButton
-                  sx={{ backgroundColor: '#eee', ml: 2 }}
+                  sx={{ ml: 2, border: '2px solid #2363eb' }}
                   onClick={() => navigate('/admin')}
                 >
                   Admin

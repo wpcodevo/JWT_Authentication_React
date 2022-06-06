@@ -74,9 +74,11 @@ const PostItem: FC<IPostItemProps> = ({ post }) => {
               gutterBottom
               variant='h5'
               component='div'
-              sx={{ color: '#4d4d4d', fontWeight: 'bold' }}
+              sx={{ color: '#4d4d4d', fontWeight: 'bold', height: '64px' }}
             >
-              {post.title}
+              {post.title.length > 50
+                ? post.title.substring(0, 50) + '...'
+                : post.title}
             </Typography>
             <Box display='flex' alignItems='center' sx={{ mt: '1rem' }}>
               <Typography

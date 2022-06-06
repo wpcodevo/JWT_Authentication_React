@@ -46,7 +46,11 @@ const HomePage = () => {
           container
           rowGap={5}
           maxWidth='lg'
-          sx={{ margin: '0 auto', pt: '5rem' }}
+          sx={{
+            margin: '0 auto',
+            pt: '5rem',
+            gridAutoRows: 'max-content',
+          }}
         >
           {posts?.map((post) => (
             <PostItem key={post.id} post={post} />
