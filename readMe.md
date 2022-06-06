@@ -15,3 +15,7 @@
 ### 4. GitHub OAuth Authentication React.js and Node.js(No Passport)
 
 [GitHub OAuth Authentication React.js and Node.js(No Passport)](https://codevoweb.com/github-oauth-authentication-react-and-node)
+
+### 5. React CRUD example with Redux Toolkit, RTK Query & REST API
+
+[React CRUD example with Redux Toolkit, RTK Query & REST API)](https://codevoweb.com/react-crud-example-with-redux-toolkit-rtk-query)
