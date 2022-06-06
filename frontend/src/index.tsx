@@ -6,6 +6,7 @@ import { CookiesProvider } from 'react-cookie';
 import App from './App';
 import AuthMiddleware from './Helpers/AuthMiddleware';
 import { store } from './redux/store';
+import './App.scss';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

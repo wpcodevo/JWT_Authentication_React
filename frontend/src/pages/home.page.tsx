@@ -48,7 +48,7 @@ const HomePage = () => {
           maxWidth='lg'
           sx={{
             margin: '0 auto',
-            pt: '5rem',
+            py: '5rem',
             gridAutoRows: 'max-content',
           }}
         >
