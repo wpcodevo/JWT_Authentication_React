@@ -10,6 +10,7 @@ export const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    // Connect the PostApi reducer to the store
     [postApi.reducerPath]: postApi.reducer,
     userState: userReducer,
     postState: postReducer,
@@ -19,6 +20,7 @@ export const store = configureStore({
     getDefaultMiddleware({}).concat([
       authApi.middleware,
       userApi.middleware,
+      // Add the PostApi middleware to the store
       postApi.middleware,
     ]),
 });
