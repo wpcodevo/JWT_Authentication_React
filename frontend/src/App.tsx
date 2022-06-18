@@ -10,6 +10,7 @@ import RequireUser from './components/requireUser';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminPage from './pages/admin.page';
+import EmailVerificationPage from './pages/verifyemail.page';
 
 function App() {
   return (
@@ -28,6 +29,9 @@ function App() {
             <Route path='admin' element={<AdminPage />} />
           </Route>
           <Route path='unauthorized' element={<UnauthorizePage />} />
+        </Route>
+        <Route path='verifyemail' element={<EmailVerificationPage />}>
+          <Route path=':verificationCode' element={<EmailVerificationPage />} />
         </Route>
         <Route path='login' element={<LoginPage />} />
         <Route path='register' element={<RegisterPage />} />

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { LoginInput } from '../../pages/login.page';
 import { RegisterInput } from '../../pages/register.page';
-import { IUser } from './types';
+import { IGenericResponse } from './types';
 import { userApi } from './userApi';
 
 const BASE_URL = process.env.REACT_APP_SERVER_ENDPOINT as string;
@@ -12,7 +12,7 @@ export const authApi = createApi({
     baseUrl: `${BASE_URL}/api/auth/`,
   }),
   endpoints: (builder) => ({
-    registerUser: builder.mutation<IUser, RegisterInput>({
+    registerUser: builder.mutation<IGenericResponse, RegisterInput>({
       query(data) {
         return {
           url: 'register',
@@ -20,8 +20,6 @@ export const authApi = createApi({
           body: data,
         };
       },
-      transformResponse: (result: { data: { user: IUser } }) =>
-        result.data.user,
     }),
     loginUser: builder.mutation<
       { access_token: string; status: string },
@@ -42,6 +40,17 @@ export const authApi = createApi({
         } catch (error) {}
       },
     }),
+    verifyEmail: builder.mutation<
+      IGenericResponse,
+      { verificationCode: string }
+    >({
+      query({ verificationCode }) {
+        return {
+          url: `verifyemail/${verificationCode}`,
+          method: 'GET',
+        };
+      },
+    }),
     logoutUser: builder.mutation<void, void>({
       query() {
         return {
@@ -57,4 +66,5 @@ export const {
   useLoginUserMutation,
   useRegisterUserMutation,
   useLogoutUserMutation,
+  useVerifyEmailMutation,
 } = authApi;

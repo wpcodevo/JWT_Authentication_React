@@ -7,3 +7,8 @@ export interface IUser {
   updatedAt: Date;
   __v: number;
 }
+
+export interface IGenericResponse {
+  status: string;
+  message: string;
+}
