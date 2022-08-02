@@ -24,9 +24,9 @@ const LoadingButton = styled(_LoadingButton)`
 
 const resetPasswordSchema = object({
   password: string()
-    .nonempty('Password is required')
+    .min(1, 'Password is required')
     .min(8, 'Password must be more than 8 characters'),
-  passwordConfirm: string().nonempty('Please confirm your password'),
+  passwordConfirm: string().min(1, 'Please confirm your password'),
 }).refine((data) => data.password === data.passwordConfirm, {
   message: 'Passwords do not match',
   path: ['passwordConfirm'],

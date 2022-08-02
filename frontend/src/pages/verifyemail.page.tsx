@@ -23,7 +23,7 @@ const LoadingButton = styled(_LoadingButton)`
 `;
 
 const verificationCodeSchema = object({
-  verificationCode: string().nonempty('Verification code is required'),
+  verificationCode: string().min(1, 'Verification code is required'),
 });
 
 export type VerificationCodeInput = TypeOf<typeof verificationCodeSchema>;
