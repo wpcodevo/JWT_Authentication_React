@@ -24,7 +24,7 @@ const LoadingButton = styled(_LoadingButton)`
 
 const forgotPasswordSchema = object({
   email: string()
-    .nonempty('Email address is required')
+    .min(1, 'Email address is required')
     .email('Email Address is invalid'),
 });
 
