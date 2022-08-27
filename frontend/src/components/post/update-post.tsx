@@ -28,7 +28,7 @@ interface IUpdatePostProp {
 
 const updatePostSchema = object({
   title: string(),
-  content: string().max(50),
+  content: string(),
   category: string().max(50),
   image: z.instanceof(File),
 }).partial();
@@ -42,6 +42,8 @@ const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal, post }) => {
   const methods = useForm<IUpdatePost>({
     resolver: zodResolver(updatePostSchema),
   });
+
+  console.log(methods.formState.errors);
 
   useEffect(() => {
     if (isSuccess) {
