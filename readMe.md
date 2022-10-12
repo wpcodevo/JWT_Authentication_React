@@ -1,6 +1,6 @@
 # JWT Authentication and Authorization with React, RTK Query, Material UI, React Hook Form and Zod.
 
-## Node.js + TypeScript + MongoDB: JWT Authentication
+## 1. Node.js + TypeScript + MongoDB: JWT Authentication
 
 In this article, you'll learn how to add JSON Web Token (JWT) Authentication to your Node.js app with TypeScript, MongoDB, Mongoose, Typegoose, Docker, Redis, and Zod.
 
@@ -44,7 +44,7 @@ In this article, you'll learn how to add JSON Web Token (JWT) Authentication to 
 
 Read the entire article here: [https://codevoweb.com/node-typescript-mongodb-jwt-authentication/](https://codevoweb.com/node-typescript-mongodb-jwt-authentication/)
 
-## Node.js + TypeScript + MongoDB: JWT Refresh Token
+## 2. Node.js + TypeScript + MongoDB: JWT Refresh Token
 
 In this article, you'll learn how to implement JWT Authentication with an Access and a Refresh token using Node.js, TypeScript, MongoDB, Redis, and Docker.
 
@@ -66,7 +66,7 @@ In this article, you'll learn how to implement JWT Authentication with an Access
 
 Read the entire article here: [https://codevoweb.com/react-node-access-refresh-tokens-authentication/](https://codevoweb.com/react-node-access-refresh-tokens-authentication/)
 
-## Google OAuth Authentication with React.js and Node.js (No Passport)
+## 3. Google OAuth Authentication with React.js and Node.js (No Passport)
 
 In this article, you'll learn how to implement Google OAuth Authentication with React.js and Node.js without using Passport. 
 You'll also learn how to send JWT access and refresh tokens after the user has been authenticated.
@@ -92,7 +92,7 @@ You'll also learn how to send JWT access and refresh tokens after the user has b
 
 Read the entire article here: [https://codevoweb.com/google-oauth-authentication-react-and-node/](https://codevoweb.com/google-oauth-authentication-react-and-node/)
 
-## GitHub OAuth Authentication React.js and Node.js(No Passport)
+## 4. GitHub OAuth Authentication React.js and Node.js(No Passport)
 
 In this article, you'll learn how to implement GitHub OAuth Authentication with React.js and Node.js without using Passport. Also, you'll learn how to send JWT access and refresh token cookies after the user has been authenticated.
 
@@ -113,7 +113,7 @@ In this article, you'll learn how to implement GitHub OAuth Authentication with 
 
 Read the entire article here: [https://codevoweb.com/github-oauth-authentication-react-and-node/](https://codevoweb.com/github-oauth-authentication-react-and-node/)
 
-## React CRUD example with Redux Toolkit, RTK Query & REST API
+## 5. React CRUD example with Redux Toolkit, RTK Query & REST API
 
 In this article, you'll learn how to make Get/Post/Patch/Delete requests to a RESTful API with React, Redux Toolkit, and RTK Query.
 
