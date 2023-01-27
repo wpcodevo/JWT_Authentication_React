@@ -56,6 +56,12 @@ export class User {
   @prop({ select: false })
   verificationCode: string | null;
 
+  @prop({ select: false })
+  passwordResetToken: string | null;
+
+  @prop({ select: false })
+  passwordResetAt: Date | null;
+
   @prop({ default: "local" })
   provider: string;
 
@@ -73,6 +79,19 @@ export class User {
       .digest("hex");
 
     return verificationCode;
+  }
+
+  createResetToken() {
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    this.passwordResetToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    this.passwordResetAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    return resetToken;
   }
 }
 

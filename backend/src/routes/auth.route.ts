@@ -1,9 +1,11 @@
 import express from "express";
 import {
+  forgotPasswordHandler,
   loginHandler,
   logoutHandler,
   refreshAccessTokenHandler,
   registerHandler,
+  resetPasswordHandler,
   verifyEmailHandler,
 } from "../controllers/auth.controller";
 import { deserializeUser } from "../middleware/deserializeUser";
@@ -34,5 +36,8 @@ router.get(
   validate(verifyEmailSchema),
   verifyEmailHandler
 );
+
+router.post("/forgotpassword", forgotPasswordHandler);
+router.patch("/resetpassword/:resetToken", resetPasswordHandler);
 
 export default router;

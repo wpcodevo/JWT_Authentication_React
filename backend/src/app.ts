@@ -1,10 +1,10 @@
 require("dotenv").config();
+import cookieParser from "cookie-parser";
 import path from "path";
 import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import config from "config";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 import connectDB from "./utils/connectDB";
 import userRouter from "./routes/user.route";
 import authRouter from "./routes/auth.route";
@@ -19,20 +19,11 @@ import sessionRouter from "./routes/session.route";
 
 const app = express();
 
-// Middleware
-
-// 1. Body Parser
 app.use(express.json({ limit: "10kb" }));
-
-// 2. Cookie Parser
 app.use(cookieParser());
 
 app.use("/api/static", express.static(path.join(__dirname, "../public")));
-
-// 3. Logger
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
-
-// 4. Cors
 app.use(
   cors({
     credentials: true,
@@ -40,14 +31,11 @@ app.use(
   })
 );
 
-// Routes
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
-// 👇 Register the session router
 app.use("/api/sessions", sessionRouter);
 app.use("/api/posts", postRouter);
 
-// Testing
 app.get(
   "/api/healthChecker",
   (req: Request, res: Response, next: NextFunction) => {
@@ -79,6 +67,5 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 const port = config.get<number>("port");
 app.listen(port, () => {
   console.log(`Server started on port: ${port}`);
-  // 👇 call the connectDB function here
   connectDB();
 });

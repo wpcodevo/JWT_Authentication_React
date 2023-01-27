@@ -79,7 +79,6 @@ export const registerHandler = async (
           "An email with a verification code has been sent to your email",
       });
     } catch (error) {
-      console.log(error);
       user.verificationCode = null;
       await user.save({ validateBeforeSave: false });
 
@@ -245,7 +244,7 @@ export const logoutHandler = async (
 ) => {
   try {
     const user = res.locals.user;
-    await redisClient.del(user._id);
+    await redisClient.del(user.id);
     logout(res);
     res.status(200).json({ status: "success" });
   } catch (err: any) {
@@ -369,5 +368,88 @@ export const githubOauthHandler = async (
     res.redirect(`${config.get<string>("origin")}${pathUrl}`);
   } catch (err: any) {
     return res.redirect(`${config.get<string>("origin")}/oauth/error`);
+  }
+};
+
+export const forgotPasswordHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await findUser({ email: req.body.email });
+
+    const message =
+      "You will receive a password reset email if user with that email exist";
+
+    if (!user) {
+      return next(new AppError(message, 403));
+    }
+
+    if (!user.verified) {
+      return new AppError("User not verified", 403);
+    }
+
+    // Create the reset token
+    const resetToken = user.createResetToken();
+    await user.save({ validateBeforeSave: false });
+
+    const url = `${config.get<string>("origin")}/resetpassword/${resetToken}`;
+
+    try {
+      await new Email(user, url).sendPasswordResetToken();
+
+      return res.status(200).json({
+        status: "success",
+        message,
+      });
+    } catch (error) {
+      user.passwordResetToken = null;
+      user.passwordResetAt = null;
+      await user.save({ validateBeforeSave: false });
+      return res.status(500).json({
+        status: "error",
+        message: "There was an error sending email, please try again",
+      });
+    }
+  } catch (err: any) {
+    next(err);
+  }
+};
+
+export const resetPasswordHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const resetToken = crypto
+      .createHash("sha256")
+      .update(req.params.resetToken)
+      .digest("hex");
+
+    const user = await findUser({
+      passwordResetToken: resetToken,
+      passwordResetAt: { $gt: new Date() },
+    });
+
+    console.log(user);
+
+    if (!user) {
+      return next(new AppError("Token is invalid or has expired", 403));
+    }
+
+    user.password = req.body.password;
+    user.passwordResetToken = null;
+    user.passwordResetAt = null;
+    await user.save();
+
+    res.status(200).json({
+      status: "success",
+      message:
+        "Password data successfully updated, please login with your new credentials",
+    });
+  } catch (err: any) {
+    next(err);
   }
 };
