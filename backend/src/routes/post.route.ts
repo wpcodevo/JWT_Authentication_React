@@ -21,6 +21,10 @@ import {
   resizePostImage,
   uploadPostImage,
 } from "../upload/single-upload-sharp";
+import {
+  resizePostImages,
+  uploadPostImages,
+} from "../upload/multi-upload-sharp";
 
 const router = express.Router();
 

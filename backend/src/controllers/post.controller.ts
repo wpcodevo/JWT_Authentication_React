@@ -22,9 +22,9 @@ export const createPostHandler = async (
   next: NextFunction
 ) => {
   try {
-    const user = await findUserById(res.locals.user.id as string);
+    const user_id = res.locals.user._id;
 
-    const post = await createPost({ input: req.body, user_id: user.id });
+    const post = await createPost({ input: req.body, user_id });
 
     res.status(201).json({
       status: "success",
@@ -143,6 +143,10 @@ export const parsePostFormData = (
     const parsedBody = { ...JSON.parse(req.body.data) };
     if (req.body.image) {
       parsedBody["image"] = req.body.image;
+    }
+
+    if (req.body.images) {
+      parsedBody["images"] = req.body.images;
     }
 
     req.body = parsedBody;

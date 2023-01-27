@@ -1,4 +1,5 @@
 require("dotenv").config();
+import path from "path";
 import express, { NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import config from "config";
@@ -10,6 +11,12 @@ import authRouter from "./routes/auth.route";
 import postRouter from "./routes/post.route";
 import sessionRouter from "./routes/session.route";
 
+// import nodemailer from 'nodemailer';
+// (async function () {
+//   const credentials = await nodemailer.createTestAccount();
+//   console.log(credentials);
+// })();
+
 const app = express();
 
 // Middleware
@@ -19,6 +26,8 @@ app.use(express.json({ limit: "10kb" }));
 
 // 2. Cookie Parser
 app.use(cookieParser());
+
+app.use("/api/static", express.static(path.join(__dirname, "../public")));
 
 // 3. Logger
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));

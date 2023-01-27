@@ -1,16 +1,15 @@
-import { omit } from 'lodash';
-import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
-import config from 'config';
-import userModel, { User } from '../models/user.model';
-import { excludedFields } from '../controllers/auth.controller';
-import { signJwt } from '../utils/jwt';
-import redisClient from '../utils/connectRedis';
-import { DocumentType } from '@typegoose/typegoose';
+import { omit } from "lodash";
+import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
+import config from "config";
+import userModel, { User } from "../models/user.model";
+import { excludedFields } from "../controllers/auth.controller";
+import { signJwt } from "../utils/jwt";
+import redisClient from "../utils/connectRedis";
+import { DocumentType } from "@typegoose/typegoose";
 
 // CreateUser service
 export const createUser = async (input: Partial<User>) => {
-  const user = await userModel.create(input);
-  return omit(user.toJSON(), excludedFields);
+  return userModel.create(input);
 };
 
 // Find User by Id
@@ -29,7 +28,7 @@ export const findUser = async (
   query: FilterQuery<User>,
   options: QueryOptions = {}
 ) => {
-  return await userModel.findOne(query, {}, options).select('+password');
+  return await userModel.findOne(query, {}, options).select("+password");
 };
 
 export const findAndUpdateUser = async (
@@ -43,13 +42,13 @@ export const findAndUpdateUser = async (
 // Sign Token
 export const signToken = async (user: DocumentType<User>) => {
   // Sign the access token
-  const access_token = signJwt({ sub: user._id }, 'accessTokenPrivateKey', {
-    expiresIn: `${config.get<number>('accessTokenExpiresIn')}m`,
+  const access_token = signJwt({ sub: user._id }, "accessTokenPrivateKey", {
+    expiresIn: `${config.get<number>("accessTokenExpiresIn")}m`,
   });
 
   // Sign the refresh token
-  const refresh_token = signJwt({ sub: user._id }, 'refreshTokenPrivateKey', {
-    expiresIn: `${config.get<number>('refreshTokenExpiresIn')}m`,
+  const refresh_token = signJwt({ sub: user._id }, "refreshTokenPrivateKey", {
+    expiresIn: `${config.get<number>("refreshTokenExpiresIn")}m`,
   });
 
   // Create a Session

@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from 'express';
-import multer, { FileFilterCallback } from 'multer';
-import sharp from 'sharp';
-import uuid from '../utils/uuid';
+import { NextFunction, Request, Response } from "express";
+import multer, { FileFilterCallback } from "multer";
+import sharp from "sharp";
+import uuid from "../utils/uuid";
 
 const multerStorage = multer.memoryStorage();
 
@@ -10,8 +10,8 @@ const multerFilter = (
   file: Express.Multer.File,
   cb: FileFilterCallback
 ) => {
-  if (!file.mimetype.startsWith('image')) {
-    return cb(new multer.MulterError('LIMIT_UNEXPECTED_FILE'));
+  if (!file.mimetype.startsWith("image")) {
+    return cb(new multer.MulterError("LIMIT_UNEXPECTED_FILE"));
   }
   cb(null, true);
 };
@@ -23,8 +23,8 @@ const upload = multer({
 });
 
 export const uploadPostImages = upload.fields([
-  { name: 'image', maxCount: 1 },
-  { name: 'images', maxCount: 3 },
+  { name: "image", maxCount: 1 },
+  { name: "images", maxCount: 3 },
 ]);
 
 export const resizePostImages = async (
@@ -43,7 +43,7 @@ export const resizePostImages = async (
       // @ts-ignore
       await sharp(req.files?.image[0]?.buffer)
         .resize(800, 450)
-        .toFormat('jpeg')
+        .toFormat("jpeg")
         .jpeg({ quality: 90 })
         .toFile(`${__dirname}/../../public/posts/single/${filename}`);
     }
@@ -60,7 +60,7 @@ export const resizePostImages = async (
           req.body.images.push(filename);
           return sharp(file.buffer)
             .resize(800, 450)
-            .toFormat('jpeg')
+            .toFormat("jpeg")
             .jpeg({ quality: 90 })
             .toFile(`${__dirname}/../../public/posts/multiple/${filename}`);
         })
