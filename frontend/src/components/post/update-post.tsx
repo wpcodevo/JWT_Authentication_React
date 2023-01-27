@@ -4,22 +4,22 @@ import {
   TextareaAutosize,
   TextField,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Controller,
   FormProvider,
   SubmitHandler,
   useForm,
-} from 'react-hook-form';
-import { object, string, TypeOf, z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import FileUpload from '../FileUpload/FileUpload';
-import { LoadingButton } from '@mui/lab';
-import { FC, useEffect } from 'react';
-import { pickBy } from 'lodash';
-import { toast } from 'react-toastify';
-import { useUpdatePostMutation } from '../../redux/api/postApi';
-import { IPostResponse } from '../../redux/api/types';
+} from "react-hook-form";
+import { object, string, TypeOf, z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FileUpload from "../FileUpload/FileUpload";
+import { LoadingButton } from "@mui/lab";
+import { FC, useEffect } from "react";
+import { pickBy } from "lodash";
+import { toast } from "react-toastify";
+import { useUpdatePostMutation } from "../../redux/api/postApi";
+import { IPostResponse } from "../../redux/api/types";
 
 interface IUpdatePostProp {
   setOpenPostModal: (openPostModal: boolean) => void;
@@ -28,7 +28,7 @@ interface IUpdatePostProp {
 
 const updatePostSchema = object({
   title: string(),
-  content: string().max(50),
+  content: string(),
   category: string().max(50),
   image: z.instanceof(File),
 }).partial();
@@ -43,9 +43,11 @@ const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal, post }) => {
     resolver: zodResolver(updatePostSchema),
   });
 
+  console.log(methods.formState.errors);
+
   useEffect(() => {
     if (isSuccess) {
-      toast.success('Post updated successfully');
+      toast.success("Post updated successfully");
       setOpenPostModal(false);
     }
 
@@ -53,12 +55,12 @@ const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal, post }) => {
       if (Array.isArray((error as any).data.error)) {
         (error as any).data.error.forEach((el: any) =>
           toast.error(el.message, {
-            position: 'top-right',
+            position: "top-right",
           })
         );
       } else {
         toast.error((error as any).data.message, {
-          position: 'top-right',
+          position: "top-right",
         });
       }
     }
@@ -87,70 +89,72 @@ const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal, post }) => {
     const formData = new FormData();
     const filteredFormData = pickBy(
       values,
-      (value) => value !== '' && value !== undefined
+      (value) => value !== "" && value !== undefined
     );
     const { image, ...otherFormData } = filteredFormData;
     if (image) {
-      formData.append('image', image);
+      formData.append("image", image);
     }
-    formData.append('data', JSON.stringify(otherFormData));
+    formData.append("data", JSON.stringify(otherFormData));
     updatePost({ id: post?.id!, post: formData });
   };
 
   return (
     <Box>
-      <Box display='flex' justifyContent='space-between' sx={{ mb: 3 }}>
-        <Typography variant='h5' component='h1'>
+      <Box display="flex" justifyContent="space-between" sx={{ mb: 3 }}>
+        <Typography variant="h5" component="h1">
           Edit Post
         </Typography>
-        {isLoading && <CircularProgress size='1rem' color='primary' />}
+        {isLoading && <CircularProgress size="1rem" color="primary" />}
       </Box>
       <FormProvider {...methods}>
         <Box
-          component='form'
+          component="form"
           noValidate
-          autoComplete='off'
+          autoComplete="off"
           onSubmit={methods.handleSubmit(onSubmitHandler)}
         >
           <TextField
-            label='Title'
+            label="Title"
             fullWidth
-            sx={{ mb: '1rem' }}
-            {...methods.register('title')}
+            sx={{ mb: "1rem" }}
+            focused
+            {...methods.register("title")}
           />
           <TextField
-            label='Category'
+            label="Category"
             fullWidth
-            sx={{ mb: '1rem' }}
-            {...methods.register('category')}
+            focused
+            sx={{ mb: "1rem" }}
+            {...methods.register("category")}
           />
           <Controller
-            name='content'
+            name="content"
             control={methods.control}
-            defaultValue=''
+            defaultValue=""
             render={({ field }) => (
               <TextareaAutosize
                 {...field}
-                placeholder='Post Details'
+                placeholder="Post Details"
                 minRows={8}
                 style={{
-                  width: '100%',
-                  border: '1px solid #c8d0d4',
-                  fontFamily: 'Roboto, sans-serif',
-                  marginBottom: '1rem',
-                  outline: 'none',
-                  fontSize: '1rem',
-                  padding: '1rem',
+                  width: "100%",
+                  border: "1px solid #c8d0d4",
+                  fontFamily: "Roboto, sans-serif",
+                  marginBottom: "1rem",
+                  outline: "none",
+                  fontSize: "1rem",
+                  padding: "1rem",
                 }}
               />
             )}
           />
-          <FileUpload limit={1} name='image' multiple={false} />
+          <FileUpload limit={1} name="image" multiple={false} />
           <LoadingButton
-            variant='contained'
+            variant="contained"
             fullWidth
-            sx={{ py: '0.8rem', mt: 4, backgroundColor: '#2363eb' }}
-            type='submit'
+            sx={{ py: "0.8rem", mt: 4, backgroundColor: "#2363eb" }}
+            type="submit"
             loading={isLoading}
           >
             Edit Post
