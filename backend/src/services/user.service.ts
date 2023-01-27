@@ -42,12 +42,12 @@ export const findAndUpdateUser = async (
 // Sign Token
 export const signToken = async (user: DocumentType<User>) => {
   // Sign the access token
-  const access_token = signJwt({ sub: user._id }, "accessTokenPrivateKey", {
+  const access_token = signJwt({ sub: user.id }, "accessTokenPrivateKey", {
     expiresIn: `${config.get<number>("accessTokenExpiresIn")}m`,
   });
 
   // Sign the refresh token
-  const refresh_token = signJwt({ sub: user._id }, "refreshTokenPrivateKey", {
+  const refresh_token = signJwt({ sub: user.id }, "refreshTokenPrivateKey", {
     expiresIn: `${config.get<number>("refreshTokenExpiresIn")}m`,
   });
 

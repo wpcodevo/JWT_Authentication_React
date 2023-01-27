@@ -209,14 +209,14 @@ export const refreshAccessTokenHandler = async (
     }
 
     // Check if the user exist
-    const user = await findUserById(JSON.parse(session)._id);
+    const user = await findUserById(JSON.parse(session).id);
 
     if (!user) {
       return next(new AppError(message, 403));
     }
 
     // Sign new access token
-    const access_token = signJwt({ sub: user._id }, "accessTokenPrivateKey", {
+    const access_token = signJwt({ sub: user.id }, "accessTokenPrivateKey", {
       expiresIn: `${config.get<number>("accessTokenExpiresIn")}m`,
     });
 

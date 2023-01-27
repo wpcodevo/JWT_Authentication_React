@@ -43,7 +43,7 @@ export const deserializeUser = async (
     }
 
     // Check if user still exist
-    const user = await findUserById(JSON.parse(session)._id);
+    const user = await findUserById(JSON.parse(session).id);
 
     if (!user) {
       return next(new AppError(`User with that token no longer exist`, 401));
