@@ -43,8 +43,6 @@ const UpdatePost: FC<IUpdatePostProp> = ({ setOpenPostModal, post }) => {
     resolver: zodResolver(updatePostSchema),
   });
 
-  console.log(methods.formState.errors);
-
   useEffect(() => {
     if (isSuccess) {
       toast.success("Post updated successfully");

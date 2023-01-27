@@ -50,7 +50,6 @@ const ForgotPasswordPage = () => {
       toast.success(data?.message);
     }
     if (isError) {
-      console.log(error);
       if (Array.isArray((error as any).data.error)) {
         (error as any).data.error.forEach((el: any) =>
           toast.error(el.message, {

@@ -4,13 +4,13 @@ import {
   IconButton,
   Stack,
   Typography,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import DeleteIcon from '@mui/icons-material/Delete';
-import uploadImg from '../../assets/cloud-upload.png';
-import { ImageConfig } from './FileConfig';
-import { Controller, useController, useFormContext } from 'react-hook-form';
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import uploadImg from "../../assets/cloud-upload.png";
+import { ImageConfig } from "./FileConfig";
+import { Controller, useController, useFormContext } from "react-hook-form";
 
 interface IProps {
   limit: number;
@@ -19,13 +19,13 @@ interface IProps {
 }
 
 const CustomBox = styled(Box)({
-  '&.MuiBox-root': {
-    backgroundColor: '#fff',
-    borderRadius: '2rem',
-    boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
-    padding: '1rem',
+  "&.MuiBox-root": {
+    backgroundColor: "#fff",
+    borderRadius: "2rem",
+    boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
+    padding: "1rem",
   },
-  '&.MuiBox-root:hover, &.MuiBox-root.dragover': {
+  "&.MuiBox-root:hover, &.MuiBox-root.dragover": {
     opacity: 0.6,
   },
 });
@@ -40,8 +40,8 @@ const FileUpload: React.FC<IProps> = ({ limit, multiple, name }) => {
   const [fileList, setFileList] = useState<File[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const onDragEnter = () => wrapperRef.current?.classList.add('dragover');
-  const onDragLeave = () => wrapperRef.current?.classList.remove('dragover');
+  const onDragEnter = () => wrapperRef.current?.classList.add("dragover");
+  const onDragLeave = () => wrapperRef.current?.classList.remove("dragover");
 
   const onFileDrop = useCallback(
     (e: React.SyntheticEvent<EventTarget>) => {
@@ -50,7 +50,7 @@ const FileUpload: React.FC<IProps> = ({ limit, multiple, name }) => {
 
       if (limit === 1) {
         const newFile = Object.values(target.files).map((file: File) => file);
-        if (singleFile.length >= 1) return alert('Only a single image allowed');
+        if (singleFile.length >= 1) return alert("Only a single image allowed");
         const updatedSingleList = [...singleFile, ...newFile];
         setSingleFile(updatedSingleList);
         field.onChange(updatedSingleList[0]);
@@ -83,7 +83,7 @@ const FileUpload: React.FC<IProps> = ({ limit, multiple, name }) => {
     setSingleFile(updatedList);
   };
 
-  type CustomType = 'jpg' | 'png' | 'svg';
+  type CustomType = "jpg" | "png" | "svg";
 
   const calcSize = (size: number) => {
     return size < 1000000
@@ -102,60 +102,60 @@ const FileUpload: React.FC<IProps> = ({ limit, multiple, name }) => {
     <>
       <CustomBox>
         <Box
-          display='flex'
-          justifyContent='center'
-          alignItems='center'
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
           sx={{
-            position: 'relative',
-            width: '100%',
-            height: '13rem',
-            border: '2px dashed #4267b2',
-            borderRadius: '20px',
+            position: "relative",
+            width: "100%",
+            height: "13rem",
+            border: "2px dashed #4267b2",
+            borderRadius: "20px",
           }}
           ref={wrapperRef}
           onDragEnter={onDragEnter}
           onDragLeave={onDragLeave}
           onDrop={onDragLeave}
         >
-          <Stack justifyContent='center' sx={{ p: 1, textAlign: 'center' }}>
-            <Typography sx={{ color: '#ccc' }}>
-              {limit > 1 ? 'Browse files to upload' : 'Browse file to upload'}
+          <Stack justifyContent="center" sx={{ p: 1, textAlign: "center" }}>
+            <Typography sx={{ color: "#ccc" }}>
+              {limit > 1 ? "Browse files to upload" : "Browse file to upload"}
             </Typography>
             <div>
               <img
                 src={uploadImg}
-                alt='file upload'
-                style={{ width: '5rem' }}
+                alt="file upload"
+                style={{ width: "5rem" }}
               />
             </div>
-            <Typography variant='body1' component='span'>
+            <Typography variant="body1" component="span">
               <strong>Supported Files</strong>
             </Typography>
-            <Typography variant='body2' component='span'>
+            <Typography variant="body2" component="span">
               JPG, JPEG, PNG
             </Typography>
           </Stack>
           <Controller
             name={name}
-            defaultValue=''
+            defaultValue=""
             control={control}
             render={({ field: { name, onBlur, ref } }) => (
               <input
-                type='file'
+                type="file"
                 name={name}
                 onBlur={onBlur}
                 ref={ref}
                 onChange={onFileDrop}
                 multiple={multiple}
-                accept='image/jpg, image/png, image/jpeg'
+                accept="image/jpg, image/png, image/jpeg"
                 style={{
                   opacity: 0,
-                  position: 'absolute',
+                  position: "absolute",
                   top: 0,
                   left: 0,
-                  width: '100%',
-                  height: '100%',
-                  cursor: 'pointer',
+                  width: "100%",
+                  height: "100%",
+                  cursor: "pointer",
                 }}
               />
             )}
@@ -164,38 +164,38 @@ const FileUpload: React.FC<IProps> = ({ limit, multiple, name }) => {
       </CustomBox>
 
       <FormHelperText
-        sx={{ textAlign: 'center', my: 1 }}
+        sx={{ textAlign: "center", my: 1 }}
         error={!!errors[name]}
       >
-        {errors[name] ? errors[name].message : ''}
+        {errors[name] ? (errors[name]?.message as unknown as string) : ""}
       </FormHelperText>
 
       {fileList.length > 0 || singleFile.length > 0 ? (
         <Stack spacing={2} sx={{ my: 2 }}>
           {(multiple ? fileList : singleFile).map((item, index) => {
-            const imageType = item.type.split('/')[1] as CustomType;
+            const imageType = item.type.split("/")[1] as CustomType;
             return (
               <Box
                 key={index}
                 sx={{
-                  position: 'relative',
-                  backgroundColor: '#f5f8ff',
+                  position: "relative",
+                  backgroundColor: "#f5f8ff",
                   borderRadius: 1.5,
                   p: 0.5,
                 }}
               >
-                <Box display='flex'>
+                <Box display="flex">
                   <img
-                    src={ImageConfig[`${imageType}`] || ImageConfig['default']}
-                    alt='upload'
+                    src={ImageConfig[`${imageType}`] || ImageConfig["default"]}
+                    alt="upload"
                     style={{
-                      height: '3.5rem',
-                      objectFit: 'contain',
+                      height: "3.5rem",
+                      objectFit: "contain",
                     }}
                   />
                   <Box sx={{ ml: 1 }}>
                     <Typography>{item.name}</Typography>
-                    <Typography variant='body2'>
+                    <Typography variant="body2">
                       {calcSize(item.size)}
                     </Typography>
                   </Box>
@@ -209,11 +209,11 @@ const FileUpload: React.FC<IProps> = ({ limit, multiple, name }) => {
                     }
                   }}
                   sx={{
-                    color: '#df2c0e',
-                    position: 'absolute',
-                    right: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
+                    color: "#df2c0e",
+                    position: "absolute",
+                    right: "1rem",
+                    top: "50%",
+                    transform: "translateY(-50%)",
                   }}
                 >
                   <DeleteIcon />
