@@ -1,5 +1,11 @@
-import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
-import postModel, { Post } from "../models/post.model";
+import {
+  FilterQuery,
+  QueryOptions,
+  UpdateQuery,
+  Types,
+  ObjectId,
+} from 'mongoose';
+import postModel, { Post } from '../models/post.model';
 
 export const createPost = async ({
   input,
@@ -15,8 +21,8 @@ export const findPostById = async (id: string) => {
   return postModel.findById(id).lean();
 };
 
-export const findAllPosts = async () => {
-  return postModel.find().populate("user");
+export const findAllPosts = async ({ userId }: { userId: ObjectId }) => {
+  return postModel.find({ user: userId }).populate('user');
 };
 
 export const findPost = async (
@@ -33,7 +39,7 @@ export const findAndUpdatePost = async (
 ) => {
   return await postModel
     .findOneAndUpdate(query, update, options)
-    .populate("user");
+    .populate('user');
 };
 
 export const findOneAndDelete = async (
