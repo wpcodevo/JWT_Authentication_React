@@ -9,8 +9,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LoadingButton as _LoadingButton } from '@mui/lab';
 import { toast } from 'react-toastify';
 import { useLoginUserMutation } from '../redux/api/authApi';
-import { ReactComponent as GoogleLogo } from '../assets/google.svg';
-import { ReactComponent as GitHubLogo } from '../assets/github.svg';
+import GoogleLogo from '../assets/google.svg';
+import GitHubLogo from '../assets/github.svg';
 
 import { getGoogleUrl } from '../utils/getGoogleUrl';
 import { getGitHubUrl } from '../utils/getGithubUrl';
@@ -70,6 +70,7 @@ const LoginPage = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success('You successfully logged in');
+      console.log('It was successful');
       navigate(from);
     }
     if (isError) {
@@ -221,7 +222,7 @@ const LoginPage = () => {
             justifyContent='center'
             alignItems='center'
           >
-            <GoogleLogo style={{ height: '2rem' }} />
+            <img style={{ height: '2rem' }} src={GoogleLogo} />
             Google
           </MuiLink>
           <MuiLink
@@ -245,7 +246,7 @@ const LoginPage = () => {
             justifyContent='center'
             alignItems='center'
           >
-            <GitHubLogo style={{ height: '2rem' }} />
+            <img style={{ height: '2rem' }} src={GitHubLogo} />
             GitHub
           </MuiLink>
         </Box>

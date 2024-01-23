@@ -7,7 +7,7 @@ import {
 import { Mutex } from 'async-mutex';
 import { logout } from '../features/userSlice';
 
-const baseUrl = `${process.env.REACT_APP_SERVER_ENDPOINT}/api/`;
+const baseUrl = `${import.meta.env.VITE_SERVER_ENDPOINT}/api/`;
 
 // Create a new mutex
 const mutex = new Mutex();

@@ -30,7 +30,7 @@ export const authApi = createApi({
           credentials: 'include',
         };
       },
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
           await dispatch(userApi.endpoints.getMe.initiate(null));

@@ -81,9 +81,14 @@ const Header = () => {
                 </>
               )}
               {user && (
-                <LoadingButton onClick={onLogoutHandler} loading={isLoading}>
-                  Logout
-                </LoadingButton>
+                <>
+                  <LoadingButton onClick={onLogoutHandler} loading={isLoading}>
+                    Logout
+                  </LoadingButton>
+                  <LoadingButton onClick={() => navigate('/profile')}>
+                    Profile
+                  </LoadingButton>
+                </>
               )}
               {user && user?.role === 'admin' && (
                 <LoadingButton

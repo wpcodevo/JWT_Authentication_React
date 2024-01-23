@@ -9,6 +9,7 @@ type IAuthMiddleware = {
 
 const AuthMiddleware: React.FC<IAuthMiddleware> = ({ children }) => {
   const [cookies] = useCookies(['logged_in']);
+  console.log({ cookies });
 
   const { isLoading } = userApi.endpoints.getMe.useQuery(null, {
     skip: !cookies.logged_in,

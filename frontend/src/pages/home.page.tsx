@@ -7,6 +7,7 @@ import PostItem from '../components/post/post.component';
 import { useGetAllPostsQuery } from '../redux/api/postApi';
 
 const HomePage = () => {
+  console.log('I was rendered');
   const { isLoading, isError, error, data: posts } = useGetAllPostsQuery();
 
   useEffect(() => {

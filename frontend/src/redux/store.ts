@@ -15,7 +15,7 @@ export const store = configureStore({
     userState: userReducer,
     postState: postReducer,
   },
-  devTools: process.env.NODE_ENV === 'development',
+  devTools: import.meta.env.VITE_NODE_ENV === 'development',
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({}).concat([
       authApi.middleware,

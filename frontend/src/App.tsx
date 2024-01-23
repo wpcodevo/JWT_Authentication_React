@@ -21,7 +21,9 @@ function App() {
       <ToastContainer />
       <Routes>
         <Route path='/' element={<Layout />}>
-          <Route index element={<HomePage />} />
+          <Route element={<RequireUser allowedRoles={['user', 'admin']} />}>
+            <Route index element={<HomePage />} />
+          </Route>
 
           {/* Private Route */}
           <Route element={<RequireUser allowedRoles={['user', 'admin']} />}>

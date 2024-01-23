@@ -1,7 +1,7 @@
 export default {
   port: 8000,
-  accessTokenExpiresIn: 1,
+  accessTokenExpiresIn: 30,
   refreshTokenExpiresIn: 59,
-  origin: "http://localhost:3000",
-  emailFrom: "contact@codevoweb.com",
+  origin: 'http://localhost:3000',
+  emailFrom: 'contact@codevoweb.com',
 };

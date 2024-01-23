@@ -30,7 +30,7 @@ export const postApi = createApi({
             body: post,
           };
         },
-        invalidatesTags: (result, error, { id }) =>
+        invalidatesTags: (result, _error, { id }) =>
           result
             ? [
                 { type: 'Posts', id },
@@ -48,7 +48,7 @@ export const postApi = createApi({
           credentials: 'include',
         };
       },
-      providesTags: (result, error, id) => [{ type: 'Posts', id }],
+      providesTags: (_result, _error, id) => [{ type: 'Posts', id }],
     }),
     getAllPosts: builder.query<IPostResponse[], void>({
       query() {

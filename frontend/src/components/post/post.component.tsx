@@ -20,7 +20,7 @@ import { IPostResponse } from '../../redux/api/types';
 import { format, parseISO } from 'date-fns';
 import './post.styles.scss';
 
-const SERVER_ENDPOINT = process.env.REACT_APP_SERVER_ENDPOINT;
+const SERVER_ENDPOINT = import.meta.env.VITE_SERVER_ENDPOINT;
 
 interface IPostItemProps {
   post: IPostResponse;
